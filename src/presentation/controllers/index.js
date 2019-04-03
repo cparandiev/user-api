@@ -7,13 +7,6 @@ const controllers = {
   user
 };
 
-// const wrap = mapObjIndexed(makeInvoker, controllers);
-// const wrap2 = mapObjIndexed(value => {
-//   console.log(value);
-//   mapObjIndexed((v, k) => console.log(k) || v, value);
-//   return { getAll: value('getAll') };
-// });
-
 const w = mapObjIndexed(controller => {
   const wrapController = makeInvoker(controller);
 
