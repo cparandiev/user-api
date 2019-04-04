@@ -1,15 +1,15 @@
 const express = require('express');
 
-const configureMiddlewares = require('./middlewares');
-const configureRoutes = require('./routes');
+module.exports = ({ serverConfig }) => {
+  const app = express();
 
-module.exports = {
-  init: container => {
-    const app = express();
+  app.start = () => {
+    app.listen(serverConfig.port, () =>
+      console.log(`Example app listening on port ${serverConfig.port}!`)
+    );
 
-    configureMiddlewares(app);
-    configureRoutes(app)(container);
-    // container.userRoutes
     return app;
-  }
+  };
+
+  return app;
 };

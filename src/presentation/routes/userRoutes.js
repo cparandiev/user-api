@@ -1,3 +1,3 @@
-module.exports = app => ({ userController }) => {
+module.exports = ({ app, userController }) => {
   app.get('/user', userController.getAll);
 };

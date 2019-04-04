@@ -1,32 +1,30 @@
 const { dbConfig, serverConfig } = require('./config');
 const createContainer = require('./utils/createContainer');
-const { application, presentationProvider } = require('./presentation');
+const presentationProvider = require('./presentation/presentationProvider');
 const applicationProvider = require('./application/applicationProvider');
 const persistenceProvider = require('./persistence/persistenceProvider');
 
 (async () => {
   try {
     const container = createContainer();
-    const { port } = serverConfig;
 
     // #region Register Configs
     container.registerService('dbConfig', () => dbConfig);
+    container.registerService('serverConfig', () => serverConfig);
     // #endregion
 
-    // #region Register Dependencies
-    presentationProvider(container);
+    // #region Register Lazy Installation Dependencies
     applicationProvider(container);
     persistenceProvider(container);
     // #endregion
 
-    const { data } = container;
+    // #region Register Dependencies
+    presentationProvider(container);
+    // #endregion
+
+    const { data, app } = container;
     data.init();
-
-    const app = application.init(container);
-
-    app.listen(port, () =>
-      console.log(`Example app listening on port ${port}!`)
-    );
+    app.start();
   } catch (errorMessage) {
     console.error(errorMessage);
     process.exit(1);
