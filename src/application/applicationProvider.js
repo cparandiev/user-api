@@ -1,5 +1,5 @@
-const userService = require('./userService');
+const servicesProvider = require('./services/servicesProvider');
 
 module.exports = container => {
-  container.registerService('userService', userService);
+  servicesProvider(container);
 };
