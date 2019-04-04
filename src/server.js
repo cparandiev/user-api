@@ -1,21 +1,23 @@
-const { dbConfig, serverConfig } = require('./config');
-const createContainer = require('./utils/createContainer');
+const { dbConfig, serverConfig, routesConfig } = require('./config');
+const { logger, createContainer } = require('./utils');
 const presentationProvider = require('./presentation/presentationProvider');
 const applicationProvider = require('./application/applicationProvider');
 const persistenceProvider = require('./persistence/persistenceProvider');
 
 (async () => {
-  try {
-    const container = createContainer();
+  const container = createContainer();
 
+  try {
     // #region Register Configs
     container.registerService('dbConfig', () => dbConfig);
     container.registerService('serverConfig', () => serverConfig);
+    container.registerService('routesConfig', () => routesConfig);
     // #endregion
 
     // #region Register Lazy Installation Dependencies
     applicationProvider(container);
     persistenceProvider(container);
+    container.registerService('logger', logger);
     // #endregion
 
     // #region Register Dependencies
@@ -26,7 +28,7 @@ const persistenceProvider = require('./persistence/persistenceProvider');
     data.init();
     app.start();
   } catch (errorMessage) {
-    console.error(errorMessage);
+    container.logger.error(errorMessage);
     process.exit(1);
   }
 })();
