@@ -1,5 +1,3 @@
-const { user } = require('../controllers');
-
-module.exports = app => {
-  app.get('/user', user.getAll);
+module.exports = app => ({ userController }) => {
+  app.get('/user', userController.getAll);
 };

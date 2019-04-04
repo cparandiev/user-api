@@ -21,8 +21,6 @@
     "prettier": "1.16.4"
   },
   "dependencies": {
-    "awilix": "4.2.1",
-    "awilix-express": "2.1.1",
     "body-parser": "1.18.3",
     "express": "4.16.4",
     "ramda": "0.26.1"

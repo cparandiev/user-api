@@ -1,1 +1,5 @@
-module.exports = require('./middlewares');
+const middlewares = require('./middlewares');
+
+module.exports = app => {
+  middlewares(app);
+};

@@ -1,14 +1,15 @@
 const express = require('express');
+
 const configureMiddlewares = require('./middlewares');
 const configureRoutes = require('./routes');
 
-const init = () => {
-  const app = express();
+module.exports = {
+  init: container => {
+    const app = express();
 
-  configureMiddlewares(app);
-  configureRoutes(app);
-
-  return app;
+    configureMiddlewares(app);
+    configureRoutes(app)(container);
+    // container.userRoutes
+    return app;
+  }
 };
-
-module.exports = { init };
