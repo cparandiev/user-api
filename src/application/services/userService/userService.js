@@ -13,26 +13,28 @@ const {
 const { ValidationError } = require('../../../utils/customErrors');
 
 module.exports = ({ data, whereSpecification, orderSpecification }) => {
-  const validateNewUser = async ({ email, givenName, familyName }) => {
+  const validateUniqueEmail = async email => {
     const {
       build,
       operators: { match, or }
     } = whereSpecification;
-
-    validateEmail({ email, errMsg: INVALID_EMAIL });
-    validateGivenName({ givenName, errMsg: INVALID_GIVEN_NAME });
-    validateFamilyName({ familyName, errMsg: INVALID_FAMILY_NAME });
-
     const where = build('email', or(match(email), match(email)));
 
-    const users = await data.user.getAllAsync({ where });
+    const users = await data.user.getAll({ where });
 
     if (users.length > 0)
       throw new ValidationError(EMAIL_ALREADY_EXISTS, 'email');
   };
 
+  const validateNewUser = async ({ email, givenName, familyName }) => {
+    validateEmail({ email, errMsg: INVALID_EMAIL });
+    validateGivenName({ givenName, errMsg: INVALID_GIVEN_NAME });
+    validateFamilyName({ familyName, errMsg: INVALID_FAMILY_NAME });
+    await validateUniqueEmail(email);
+  };
+
   return {
-    getAllAsync: async () => {
+    getAll: async () => {
       const {
         build,
         operators: { match, or }
@@ -49,14 +51,14 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
         orderBy({ field: 'givenName', orderType: 'desc' })
       ]);
 
-      const users = await data.user.getAllAsync({ where, order });
+      const users = await data.user.getAll({ where, order });
 
       return users;
     },
-    createAsync: async user => {
+    create: async user => {
       await validateNewUser(user);
 
-      const newUser = await data.user.createAsync(user);
+      const newUser = await data.user.create(user);
 
       return newUser;
     }

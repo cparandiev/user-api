@@ -10,7 +10,7 @@ module.exports = ({ context, modelName, modelSchema }) => {
   const model = context.model(modelName, modelSchema);
 
   return {
-    getAllAsync: async (spec = {}) => {
+    getAll: async (spec = {}) => {
       const query = model.find();
 
       applySpecifications({ spec, query });
@@ -19,7 +19,7 @@ module.exports = ({ context, modelName, modelSchema }) => {
 
       return dbResponse;
     },
-    createAsync: async data => {
+    create: async data => {
       const dbResponse = await model.create(data);
 
       return dbResponse;
