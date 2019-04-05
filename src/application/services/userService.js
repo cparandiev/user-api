@@ -1,25 +1,46 @@
-module.exports = ({ data, whereSpecification, orderSpecification }) => ({
-  getAllAsync: async () => {
-    const {
-      build,
-      operators: { match, or }
-    } = whereSpecification;
+const validator = require('validator');
 
-    const { orderBy, multipleOrder } = orderSpecification;
+const { ValidationError } = require('../../utils/customErrors');
 
-    const where = build('givenName', or(match('Tsvetko2'), match('Tsvetko3')));
+module.exports = ({ data, whereSpecification, orderSpecification }) => {
+  const validateNewUser = newUser => {
+    if (!validator.isEmail(newUser.email)) throw new ValidationError();
 
-    const order = multipleOrder([
-      orderBy({ field: 'givenName', orderType: 'desc' })
-    ]);
+    if (!validator.isLength(newUser.givenName, 5, 100))
+      throw new ValidationError();
 
-    const users = await data.user.getAllAsync({ where, order });
+    if (!validator.isLength(newUser.familyName, 5, 100))
+      throw new ValidationError();
+  };
 
-    return users;
-  },
-  createAsync: async user => {
-    const newUser = await data.user.createAsync(user);
+  return {
+    getAllAsync: async () => {
+      const {
+        build,
+        operators: { match, or }
+      } = whereSpecification;
 
-    return newUser;
-  }
-});
+      const { orderBy, multipleOrder } = orderSpecification;
+
+      const where = build(
+        'givenName',
+        or(match('Tsvetko2'), match('Tsvetko3'))
+      );
+
+      const order = multipleOrder([
+        orderBy({ field: 'givenName', orderType: 'desc' })
+      ]);
+
+      const users = await data.user.getAllAsync({ where, order });
+
+      return users;
+    },
+    createAsync: async user => {
+      validateNewUser(user);
+
+      const newUser = await data.user.createAsync(user);
+
+      return newUser;
+    }
+  };
+};
