@@ -7,8 +7,6 @@ module.exports = ({ serverConfig, logger }) => {
     app.listen(serverConfig.port, () =>
       logger.info(`Example app listening on port ${serverConfig.port}!`)
     );
-
-    return app;
   };
 
   return app;

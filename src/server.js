@@ -25,7 +25,7 @@ const persistenceProvider = require('./persistence/persistenceProvider');
     // #endregion
 
     const { data, app } = container;
-    data.init();
+    await data.init();
     app.start();
   } catch (errorMessage) {
     container.logger.error(errorMessage);

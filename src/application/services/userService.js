@@ -1,6 +1,19 @@
-module.exports = ({ data }) => ({
+module.exports = ({ data, whereSpecification, orderSpecification }) => ({
   getAllAsync: async () => {
-    const users = await data.user.getAllAsync();
+    const {
+      build,
+      operators: { match, or }
+    } = whereSpecification;
+
+    const { orderBy, multipleOrder } = orderSpecification;
+
+    const where = build('givenName', or(match('Tsvetko2'), match('Tsvetko3')));
+
+    const order = multipleOrder([
+      orderBy({ field: 'givenName', orderType: 'desc' })
+    ]);
+
+    const users = await data.user.getAllAsync({ where, order });
 
     return users;
   },

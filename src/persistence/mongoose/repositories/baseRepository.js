@@ -1,10 +1,22 @@
+const applySpecifications = ({ spec, query }) => {
+  query.find(spec.where);
+
+  if (spec.order) {
+    query.sort(spec.order);
+  }
+};
+
 module.exports = ({ context, modelName, modelSchema }) => {
   const model = context.model(modelName, modelSchema);
 
   return {
-    getAllAsync: async () => {
-      const dbResponse = await model.find().exec();
+    getAllAsync: async (spec = {}) => {
+      const query = model.find();
 
+      applySpecifications({ spec, query });
+
+      const dbResponse = await query.exec();
+      console.log(dbResponse);
       return dbResponse;
     },
     createAsync: async data => {
