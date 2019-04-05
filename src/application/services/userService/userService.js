@@ -17,9 +17,9 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
   const validateUniqueEmail = async email => {
     const {
       build,
-      operators: { match, or }
+      operators: { match }
     } = whereSpecification;
-    const where = build('email', or(match(email), match(email)));
+    const where = build('email', match(email));
 
     const users = await data.user.getAll({ where });
 
@@ -39,21 +39,18 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
     await validateUniqueEmail(email);
   };
 
-  const validateUpdatedUser = async (id, { email, givenName, familyName }) => {
-    validateEmail({ email, errMsg: INVALID_EMAIL });
+  const validateUpdatedUser = async (id, { givenName, familyName }) => {
     validateGivenName({ givenName, errMsg: INVALID_GIVEN_NAME });
     validateFamilyName({ familyName, errMsg: INVALID_FAMILY_NAME });
     await validateUserExists(id);
   };
 
   return {
-    create: async ({ email, givenName, familyName }) => {
-      await validateNewUser({ email, givenName, familyName });
+    create: async user => {
+      await validateNewUser(user);
 
       const newUser = await data.user.create({
-        email,
-        givenName,
-        familyName,
+        ...user,
         created: new Date()
       });
 
@@ -77,11 +74,10 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
 
       return users;
     },
-    updateById: async (id, { email, givenName, familyName }) => {
-      await validateUpdatedUser(id, { email, givenName, familyName });
+    updateById: async (id, { givenName, familyName }) => {
+      await validateUpdatedUser(id, { givenName, familyName });
 
       const updatedUser = await data.user.updateById(id, {
-        email,
         givenName,
         familyName
       });

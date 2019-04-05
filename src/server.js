@@ -26,7 +26,7 @@ const persistenceProvider = require('./persistence/persistenceProvider');
 
     const { data, app } = container;
     await data.init();
-    app.start();
+    await app.start();
   } catch (errorMessage) {
     container.logger.error(errorMessage);
     process.exit(1);
