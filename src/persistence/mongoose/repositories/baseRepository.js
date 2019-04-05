@@ -16,12 +16,12 @@ module.exports = ({ context, modelName, modelSchema }) => {
       applySpecifications({ spec, query });
 
       const dbResponse = await query.exec();
-      console.log(dbResponse);
+
       return dbResponse;
     },
     createAsync: async data => {
       const dbResponse = await model.create(data);
-      console.log(dbResponse);
+
       return dbResponse;
     }
   };

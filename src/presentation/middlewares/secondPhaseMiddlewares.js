@@ -2,12 +2,14 @@
 require('express-async-errors');
 const { ValidationError } = require('../../utils/customErrors');
 
-module.exports = ({ app }) => {
+module.exports = ({ app, logger }) => {
   app.use((err, req, res, next) => {
     if (err instanceof ValidationError) {
-      res.status(400).json({ message: err.message });
+      res.status(400).json({ message: err.message, field: err.field });
+      logger.info(err);
     } else {
       res.status(500).json({ message: 'Something went wrong!' });
+      logger.error(err);
     }
   });
 };
