@@ -1,31 +1,46 @@
+const { map } = require('ramda');
+const { toUserViewModel } = require('../utils');
+
 module.exports = ({ userService }) => ({
   create: async (req, res) => {
     const userBm = req.body;
 
     const newUser = await userService.create(userBm);
 
-    res.status(201).json(newUser);
+    const userVm = toUserViewModel(newUser);
+
+    res.status(201).json(userVm);
   },
+
   getById: async (req, res) => {
     const user = await userService.getById(req.params.id);
 
-    res.status(200).json(user);
+    const userVm = toUserViewModel(user);
+
+    res.status(200).json(userVm);
   },
+
   getAll: async (req, res) => {
     const users = await userService.getAll();
 
-    res.status(200).json(users);
+    const userVms = map(toUserViewModel, users);
+
+    res.status(200).json(userVms);
   },
+
   updateById: async (req, res) => {
     const {
       body: userBm,
       params: { id }
     } = req;
 
-    const newUser = await userService.updateById(id, userBm);
+    const updatedUser = await userService.updateById(id, userBm);
 
-    res.status(200).json(newUser);
+    const userVm = toUserViewModel(updatedUser);
+
+    res.status(200).json(userVm);
   },
+
   deleteById: async (req, res) => {
     const {
       params: { id }

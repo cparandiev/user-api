@@ -30,7 +30,7 @@ module.exports = ({ context, modelName, modelSchema }) => {
       return dbResponse;
     },
     updateById: async (id, data) => {
-      const dbResponse = await model.findByIdAndUpdate(id, data);
+      const dbResponse = await model.findByIdAndUpdate(id, data, { new: true });
 
       return dbResponse;
     },

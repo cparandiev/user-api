@@ -47,10 +47,15 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
   };
 
   return {
-    create: async user => {
-      await validateNewUser(user);
+    create: async ({ email, givenName, familyName }) => {
+      await validateNewUser({ email, givenName, familyName });
 
-      const newUser = await data.user.create(user);
+      const newUser = await data.user.create({
+        email,
+        givenName,
+        familyName,
+        created: new Date()
+      });
 
       return newUser;
     },
@@ -62,30 +67,24 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
       return user;
     },
     getAll: async () => {
-      const {
-        build,
-        operators: { match, or }
-      } = whereSpecification;
-
       const { orderBy, multipleOrder } = orderSpecification;
-
-      const where = build(
-        'givenName',
-        or(match('Tsvetko2'), match('Tsvetko3'))
-      );
 
       const order = multipleOrder([
         orderBy({ field: 'givenName', orderType: 'desc' })
       ]);
 
-      const users = await data.user.getAll({ where, order });
+      const users = await data.user.getAll({ order });
 
       return users;
     },
-    updateById: async (id, user) => {
-      await validateUpdatedUser(id, user);
+    updateById: async (id, { email, givenName, familyName }) => {
+      await validateUpdatedUser(id, { email, givenName, familyName });
 
-      const updatedUser = await data.user.updateById(id, user);
+      const updatedUser = await data.user.updateById(id, {
+        email,
+        givenName,
+        familyName
+      });
 
       return updatedUser;
     },
