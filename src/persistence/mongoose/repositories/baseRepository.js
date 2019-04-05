@@ -10,6 +10,16 @@ module.exports = ({ context, modelName, modelSchema }) => {
   const model = context.model(modelName, modelSchema);
 
   return {
+    create: async data => {
+      const dbResponse = await model.create(data);
+
+      return dbResponse;
+    },
+    getById: async id => {
+      const dbResponse = await model.findById(id);
+
+      return dbResponse;
+    },
     getAll: async (spec = {}) => {
       const query = model.find();
 
@@ -19,10 +29,13 @@ module.exports = ({ context, modelName, modelSchema }) => {
 
       return dbResponse;
     },
-    create: async data => {
-      const dbResponse = await model.create(data);
+    updateById: async (id, data) => {
+      const dbResponse = await model.findByIdAndUpdate(id, data);
 
       return dbResponse;
+    },
+    deleteById: async id => {
+      await model.findByIdAndDelete(id);
     }
   };
 };
