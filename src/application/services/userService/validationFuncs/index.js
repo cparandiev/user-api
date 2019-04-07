@@ -7,11 +7,11 @@ module.exports = {
       throw new ValidationError(errMsg, field);
   },
   validateGivenName: ({ givenName, errMsg, field = 'givenName' }) => {
-    if (!givenName || !validator.isLength(givenName, 5, 100))
+    if (!givenName || !validator.isLength(givenName, 1, 100))
       throw new ValidationError(errMsg, field);
   },
   validateFamilyName: ({ familyName, errMsg, field = 'familyName' }) => {
-    if (!familyName || !validator.isLength(familyName, 5, 100))
+    if (!familyName || !validator.isLength(familyName, 1, 100))
       throw new ValidationError(errMsg, field);
   }
 };

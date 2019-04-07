@@ -11,7 +11,10 @@ const {
   USER_NOT_FOUND
 } = require('./constants/errorMessages');
 
-const { ValidationError } = require('../../../utils/customErrors');
+const {
+  ValidationError,
+  NotFoundError
+} = require('../../../utils/customErrors');
 
 module.exports = ({ data, whereSpecification, orderSpecification }) => {
   const validateUniqueEmail = async email => {
@@ -29,7 +32,7 @@ module.exports = ({ data, whereSpecification, orderSpecification }) => {
 
   const validateUserExists = async id => {
     const user = await data.user.getById(id);
-    if (!user) throw new ValidationError(USER_NOT_FOUND, 'id');
+    if (!user) throw new NotFoundError(USER_NOT_FOUND, 'id');
   };
 
   const validateNewUser = async ({ email, givenName, familyName }) => {
